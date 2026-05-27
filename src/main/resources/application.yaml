@@ -1,9 +1,11 @@
 spring:
   application:
     name: taskflow
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/taskflow
+    url: jdbc:postgresql://localhost:5433/taskflow
     username: postgres
     password: zaq1@WSX
     driver-class-name: org.postgresql.Driver
