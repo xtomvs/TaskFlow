@@ -5,6 +5,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -26,6 +28,9 @@ public class Project {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<ProjectMember> members = new ArrayList<>();
+
     public Project() {}
 
     public Project(String projectName, String description) {
@@ -38,10 +43,12 @@ public class Project {
     public String getDescription() { return description; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public List<ProjectMember> getMembers() { return members; }
 
     public void setProjectName(String projectName) { this.projectName = projectName; }
     public void setDescription(String description) { this.description = description; }
     public void setId(Long id) { this.id = id; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setMembers(List<ProjectMember> members) { this.members = members; }
 }
