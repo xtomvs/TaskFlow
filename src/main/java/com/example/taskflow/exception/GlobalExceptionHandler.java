@@ -1,15 +1,14 @@
 package com.example.taskflow.exception;
 
-
 import com.example.taskflow.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneral(Exception ex) {
         Map<String, String> errors = Map.of("error", ex.getMessage() != null ? ex.getMessage() : "Wystąpił błąd");
         ErrorResponse response = new ErrorResponse("Błąd serwera", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -48,7 +47,12 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = Map.of("error", "Brak wymaganych uprawnień (np. roli ADMIN)");
         ErrorResponse response = new ErrorResponse("Odmowa dostępu", errors);
 
-        // Zwracamy poprawny status: 403 FORBIDDEN
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNotFound(TaskNotFoundException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }

@@ -12,7 +12,7 @@ public class TaskMapper {
         r.setDescription(t.getDescription());
         r.setStatus(t.getStatus());
         r.setPriority(t.getPriority());
-        r.setDueDate(t.getDueDate());
+        r.setDeadline(t.getDeadline());
         r.setCreatedAt(t.getCreatedAt());
         r.setUpdatedAt(t.getUpdatedAt());
 

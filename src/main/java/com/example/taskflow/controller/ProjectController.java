@@ -2,7 +2,6 @@ package com.example.taskflow.controller;
 
 import com.example.taskflow.dto.request.ProjectRequest;
 import com.example.taskflow.dto.response.ProjectResponse;
-import com.example.taskflow.repository.ProjectRepository;
 import com.example.taskflow.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

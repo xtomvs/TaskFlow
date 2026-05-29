@@ -8,6 +8,7 @@ import com.example.taskflow.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
 
-
+    @Transactional(readOnly = true)
     public List<ProjectResponse> getAllProjects() {
         return projectRepository.findAll()
                 .stream()
@@ -25,6 +26,7 @@ public class ProjectService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ProjectResponse getProjectById(Long id)  {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -32,6 +34,7 @@ public class ProjectService {
         return ProjectMapper.toResponse(project);
     }
 
+    @Transactional
     public ProjectResponse create(ProjectRequest request) {
         if (projectRepository.existsByProjectName(request.getProjectName())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Project name already exists");
@@ -44,6 +47,7 @@ public class ProjectService {
         return ProjectMapper.toResponse(projectRepository.save(project));
     }
 
+    @Transactional
     public ProjectResponse update(Long id, ProjectRequest request) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -52,14 +56,14 @@ public class ProjectService {
         project.setProjectName(request.getProjectName());
         project.setDescription(request.getDescription());
 
-        return ProjectMapper.toResponse(projectRepository.save(project));
+        return ProjectMapper.toResponse(project);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!projectRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found: " + id);
         }
         projectRepository.deleteById(id);
     }
-
 }

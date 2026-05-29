@@ -19,5 +19,5 @@ spring:
 
 security:
   jwt:
-    secret: my-secret
+    secret: ${JWT_SECRET:ToJestBardzoDlugiTajnyKluczDoGenerowaniaTokenowJWT12345!}
     expiration: 86400000

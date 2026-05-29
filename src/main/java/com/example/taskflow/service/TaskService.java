@@ -12,6 +12,7 @@ import com.example.taskflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<TaskResponse> getAllTasks() {
         return taskRepository.findAll()
                 .stream()
@@ -30,6 +32,7 @@ public class TaskService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public TaskResponse getTaskById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -37,6 +40,7 @@ public class TaskService {
         return TaskMapper.toResponse(task);
     }
 
+    @Transactional
     public TaskResponse create(TaskRequest request) {
         Project project = projectRepository.findById(request.getProjectId())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -47,7 +51,7 @@ public class TaskService {
         task.setDescription(request.getDescription());
         task.setStatus(request.getStatus());
         task.setPriority(request.getPriority());
-        task.setDueDate(request.getDueDate());
+        task.setDeadline(request.getDeadline());
         task.setProject(project);
 
         if (request.getAssigneeId() != null) {
@@ -60,6 +64,7 @@ public class TaskService {
         return TaskMapper.toResponse(taskRepository.save(task));
     }
 
+    @Transactional
     public TaskResponse update(Long id, TaskRequest request) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -69,17 +74,16 @@ public class TaskService {
         task.setDescription(request.getDescription());
         task.setPriority(request.getPriority());
         task.setStatus(request.getStatus());
-        task.setDueDate(request.getDueDate());
+        task.setDeadline(request.getDeadline());
 
-        return TaskMapper.toResponse(taskRepository.save(task));
+        return TaskMapper.toResponse(task);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!taskRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found: " + id);
         }
         taskRepository.deleteById(id);
     }
-
-
 }
