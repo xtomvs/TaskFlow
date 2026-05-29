@@ -48,7 +48,5 @@ public class Project {
     public void setProjectName(String projectName) { this.projectName = projectName; }
     public void setDescription(String description) { this.description = description; }
     public void setId(Long id) { this.id = id; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     public void setMembers(List<ProjectMember> members) { this.members = members; }
 }
